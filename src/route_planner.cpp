@@ -60,24 +60,27 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Remove that node from the open_list.
 // - Return the pointer.
 
+//Create custom user function for sorting based on f_values
+bool compare_f_values(RouteModel::Node *u1, RouteModel::Node *u2) {
+    return ((u1->h_value + u1->g_value) < (u2->h_value + u2->g_value));
+}
+
 RouteModel::Node *RoutePlanner::NextNode() {
     
-    vector<float> f_value;
-    vector< pair<float, RouteModel::Node>> open_list_w_f_value; //creating a vector pair for the sort function
+    std::vector<float> f_value;
     RouteModel::Node *next_node;
-    
-    /*for(uint i = 0; i <= size(open_list); i++) {
-        f_value[i] = open_list[i].h_value + open_list[i].g_value;
-        open_list_w_f_value.push_back(f_value[i], *open_list[i]);
-    }*/
-    //Create custom user function for sorting based on f_values
-    boolean compare_f_values(const RouteModel::Node *u1, const RouteModel::Node *u2) {
-        return (if((u1->h_value + u1->g_value) < (u2->h_value + u2->g_value)));
-    }
+
     //Sort open_list
-    //std::sort(open_list_w_f_value.begin(), open_list_w_f_value.begin());
     std::sort(open_list.begin(), open_list.end(), compare_f_values);
-    next_node = &
+
+    //Set pointer to node with lowest f_value
+    next_node = open_list[0];
+
+    //Remove node from open_list
+    open_list.erase(open_list.begin());
+
+    //Return pointer
+    return next_node;
 }
 
 
