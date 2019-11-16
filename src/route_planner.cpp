@@ -44,7 +44,6 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 
         each_neighbor->parent = current_node; // note to self, how do I get this?
         each_neighbor->h_value = RoutePlanner::CalculateHValue(each_neighbor);
-        //each_neighbor->g_value = current_node->g_value + start_node->distance(*current_node);
         each_neighbor->g_value = current_node->g_value + each_neighbor->distance(*current_node);
         open_list.emplace_back(each_neighbor);
         each_neighbor->visited = true;
@@ -128,5 +127,16 @@ void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
     // TODO: Implement your solution here.
+
+    current_node = start_node;
+
+    while(current_node != end_node) {
+
+        AddNeighbors(current_node);
+        current_node = NextNode();
+
+    }
+
+    m_Model.path = ConstructFinalPath(current_node);
 
 }
