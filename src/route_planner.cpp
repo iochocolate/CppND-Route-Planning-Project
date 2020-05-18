@@ -38,12 +38,13 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 
-    current_node->FindNeighbors();
 
+    current_node->FindNeighbors();
+    
     for(RouteModel::Node *each_neighbor : current_node->neighbors) {
 
         each_neighbor->parent = current_node; // note to self, how do I get this?
-        each_neighbor->h_value = RoutePlanner::CalculateHValue(each_neighbor);
+        each_neighbor->h_value = CalculateHValue(each_neighbor);
         each_neighbor->g_value = current_node->g_value + each_neighbor->distance(*current_node);
         open_list.emplace_back(each_neighbor);
         each_neighbor->visited = true;
@@ -74,7 +75,7 @@ RouteModel::Node *RoutePlanner::NextNode() {
     std::sort(open_list.begin(), open_list.end(), compare_f_values);
 
     //Set pointer to node with lowest f_value
-    next_node = open_list[0];
+    next_node = open_list.front();
 
     //Remove node from open_list
     open_list.erase(open_list.begin());
@@ -128,7 +129,11 @@ void RoutePlanner::AStarSearch() {
 
     // TODO: Implement your solution here.
 
+    // Initialize current node and open list
+
     current_node = start_node;
+    start_node->visited = true;
+    open_list.push_back(start_node);
 
     while(current_node != end_node) {
 
